@@ -33,8 +33,10 @@ RUN sed -ri -e 's!/var/www/html/!${APACHE_DOCUMENT_ROOT}/!g' /etc/apache2/apache
 # Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
 
-# Give permissions to storage and bootstrap cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Create SQLite database file if using SQLite and ensure storage permissions
+RUN mkdir -p /var/www/html/database \
+    && touch /var/www/html/database/database.sqlite \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 # Clear cache properly and run migrations
 RUN php artisan config:clear \
