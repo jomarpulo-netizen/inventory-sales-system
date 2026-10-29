@@ -36,4 +36,10 @@ RUN a2enmod rewrite
 # Give permissions to storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Run configuration cache and database migrations
+RUN php artisan config:clear \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan migrate --force
+
 EXPOSE 80
